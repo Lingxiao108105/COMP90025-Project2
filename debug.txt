@@ -1,0 +1,10 @@
+        printf("ADD node: %d\n", i);
+        print_adjacent_matrix(node_number, current_edge_covered);
+
+        update_covered_edge(i,node_number,adjacent_matrix,current_edge_covered);
+
+        print_adjacent_matrix(node_number, current_edge_covered);
+
+        printf("range_left %d range_right %d \n", range_left, range_right);
+
+        printf("node_left %d\n", node_left);

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <omp.h>
+//#include <omp.h>
 #include <string.h>
 
 #define TRUE 1
@@ -128,7 +128,7 @@ int main(int argc, char * argv[]){
     adjacent_matrix = read_adjacent_matrix(&node_number,&edge_number);
 
     //print number of node and edge
-    printf("%d %d %d ",node_number,edge_number,number_thread);
+    printf("%d %d ",node_number,edge_number);
 
     // set number of threads
     // omp_set_num_threads(number_thread);
@@ -164,7 +164,7 @@ int min(int a, int b){
  */
 int **read_adjacent_matrix(int *node_number, int *edge_number){
     // store input edge u->v with capactiy
-    int u,v,capacity,current_edge_number = 0;
+    int u,v,current_edge_number = 0;
     int **adjacent_matrix;
     int i;
 
@@ -174,8 +174,9 @@ int **read_adjacent_matrix(int *node_number, int *edge_number){
     adjacent_matrix = create_adjacent_matrix(*node_number);
 
     //read the edges
-    while(scanf("%d %d %d\n", &u,&v,&capacity) == 3){
-        adjacent_matrix[u][v] = capacity;
+    while(scanf("%d %d\n", &u,&v) == 2){
+        adjacent_matrix[u][v] = 1;
+        adjacent_matrix[v][u] = 1;
         current_edge_number++;
     }
 
@@ -377,7 +378,10 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 
     }
 
-    //print the result
+
+    // print the result
+    printf("%d ", number_vertices);
+
     for(i=0;i<number_vertices;i++){
         printf("%d ", vertex_cover_subset[i]);
     }
@@ -403,7 +407,8 @@ int* recursive_find_vertex_cover(int node_number, Coordinate *edges,
     int *vertex_cover_subset = NULL;
 
     // number of vertices which needed to be add to the subset
-    int node_left = subset_node_number - current_subset_node - 1;
+    int node_left = subset_node_number - current_subset_node;
+
     // base case
     if(node_left == 1){
         return last_verify(node_number, edges, edge_number,  adjacent_matrix,
@@ -412,13 +417,19 @@ int* recursive_find_vertex_cover(int node_number, Coordinate *edges,
     }
 
     // the start number of the for loop
-    int range_left = current_subset_node;
+    int range_left;
+    //first vertex to be add to the subset
+    if(current_subset_node == 0){
+        range_left = 0;
+    }else{
+        range_left = vertex_subset[current_subset_node-1] + 1;
+    }
     // the end number of the for loop
-    int range_right = node_number - subset_node_number - current_subset_node + 1;
+    int range_right = node_number - subset_node_number + current_subset_node + 1;
 
     for(i=range_left;i<range_right;i++){
         // prepare the data for next recursion
-        current_edge_covered = copy_adjacent_matrix(node_number, adjacent_matrix);
+        current_edge_covered = copy_adjacent_matrix(node_number, edge_covered);
         update_covered_edge(i,node_number,adjacent_matrix,current_edge_covered);
 
         current_vertex_subset = (int *)malloc(sizeof(int) * (current_subset_node + 1));
@@ -461,9 +472,15 @@ int* last_verify(int node_number, Coordinate *edges,
     int *vertex_cover_subset = NULL;
 
     // the start number of the for loop
-    int range_left = current_subset_node;
+    int range_left;
+    //first vertex to be add to the subset
+    if(current_subset_node == 0){
+        range_left = 0;
+    }else{
+        range_left = vertex_subset[current_subset_node-1] + 1;
+    }
     // the end number of the for loop
-    int range_right = node_number - subset_node_number - current_subset_node + 1;
+    int range_right = node_number - subset_node_number + current_subset_node + 1;
 
     // prepare the matrix for edge covered by subset
     current_edge_covered = create_adjacent_matrix(node_number);
@@ -528,8 +545,8 @@ int verify(Coordinate *edges, int edge_number, int **edge_covered){
 void update_covered_edge(int added_node,int node_number, int** adjacent_matrix, int **edge_covered){
     int i;
     for(i=0;i<node_number;i++){
-        edge_covered[i][added_node] = edge_covered[i][added_node] && adjacent_matrix[i][added_node];
-        edge_covered[added_node][i] = edge_covered[added_node][i] && adjacent_matrix[added_node][i];
+        edge_covered[i][added_node] = edge_covered[i][added_node] || adjacent_matrix[i][added_node];
+        edge_covered[added_node][i] = edge_covered[added_node][i] || adjacent_matrix[added_node][i];
     }
 
 }
