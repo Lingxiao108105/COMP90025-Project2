@@ -1,2 +1,2 @@
-gcc solution.c -o solution.exe
-solution.exe < input/input1.txt
+gcc -fopenmp solution.c -o solution
+./solution < input/input1.txt

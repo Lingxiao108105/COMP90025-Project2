@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-//#include <omp.h>
+#include <omp.h>
 #include <string.h>
 
 #define TRUE 1
@@ -78,6 +78,8 @@ void push(Queue *queue, int node);
 int pop(Queue *queue);
 
 //===========================================================
+//parallel algorithm
+void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matrix);
 //sequential algorithm
 void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_matrix);
 
@@ -92,6 +94,15 @@ int* recursive_find_vertex_cover(int node_number, Coordinate *edges,
                                 int **edge_covered, 
                                 int current_subset_node, 
                                 int subset_node_number, int *vertex_subset);
+/**
+ * find the vertex cover in parallel(return null if not found)
+*/
+int *recursive_find_vertex_cover_par(int node_number, Coordinate *edges, 
+                                int edge_number,  int **adjacent_matrix,
+                                int **edge_covered, 
+                                int current_subset_node, 
+                                int subset_node_number, int *vertex_subset, 
+                                int depth);
 /**
  * add the last node to the subset and verify 
 */
@@ -116,13 +127,13 @@ int main(int argc, char * argv[]){
     int node_number,edge_number,is_parallel,number_thread;
     int **adjacent_matrix;
     
-    // if(argc != NUM_CONFIGURATION + 1){
-    //     perror("Not enough configuration!");
-    //     exit(1);
-    // }
+    if(argc != NUM_CONFIGURATION + 1){
+        perror("Not enough configuration!");
+        exit(1);
+    }
 
-    // is_parallel = atoi(argv[1]);
-    // number_thread = atoi(argv[2]);
+    is_parallel = atoi(argv[1]);
+    number_thread = atoi(argv[2]);
 
     //scan the input
     adjacent_matrix = read_adjacent_matrix(&node_number,&edge_number);
@@ -130,18 +141,18 @@ int main(int argc, char * argv[]){
     //print number of node and edge
     printf("%d %d ",node_number,edge_number);
 
-    // set number of threads
-    // omp_set_num_threads(number_thread);
+    //set number of threads
+    omp_set_num_threads(number_thread);
 
-    // computation
-    // if(is_parallel == 0){
-    //     sequential_vertex_cover(node_number,edge_number,adjacent_matrix);
-    // }else{
-    //     perror("is_parallel wrong!");
-    //     exit(1);
-    // }
-
-    sequential_vertex_cover(node_number,edge_number, adjacent_matrix);
+    //computation
+    if(is_parallel == 0){
+        sequential_vertex_cover(node_number,edge_number,adjacent_matrix);
+    }else if(is_parallel == 1){
+        parallel_vertex_cover(node_number,edge_number,adjacent_matrix);
+    }else{
+        perror("is_parallel wrong!");
+        exit(1);
+    }
 
     //free the matrix
     free_adjacent_matrix(node_number,adjacent_matrix);
@@ -336,6 +347,75 @@ int pop(Queue *queue){
 
 
 //find the minimal set of vertices that cover all the edges
+void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matrix){
+    //number of vertices in the set
+    int number_vertices;
+    int i,j,k,current_edges=0;
+    // the valid vertex cover (might be NULL)
+    int *vertex_cover_subset = NULL;
+
+    //coordinate of edge
+    Coordinate temp_coord;
+
+    double start_time = omp_get_wtime();
+
+    //record the current vertex set
+    int *vertex_set = (int*)malloc(sizeof(int) * node_number);
+    //a 2d matrix which record the edge touched by vertices
+    int **edge_covered = create_adjacent_matrix(node_number);
+
+    //store the coordinates of edges into a dynamic array
+    Coordinate *edges = (Coordinate *)malloc(sizeof(Coordinate) * edge_number);
+    for(i=0;i<node_number;i++){
+        for(j=i;j<node_number;j++){
+            if(adjacent_matrix[i][j] != 0){
+                temp_coord.x = i;
+                temp_coord.y = j;
+                edges[current_edges] = temp_coord;
+                current_edges++;
+            }
+        }
+    }
+
+    #pragma omp parallel
+    #pragma omp single
+    // loop throught all the vertices set to find minimal vertex cover
+    for(number_vertices=1;number_vertices<=node_number;number_vertices++){
+
+        vertex_cover_subset = recursive_find_vertex_cover_par(node_number, 
+                                edges, edge_number, adjacent_matrix,
+                                edge_covered, 0, number_vertices, NULL, 0);
+
+        #pragma omp taskwait
+
+        // stop when find valid vertex cover
+        if(vertex_cover_subset != NULL){
+            break;
+        }
+
+    }
+
+    double end_time = omp_get_wtime();
+
+    //print time
+    printf("%f ",end_time-start_time);
+
+    // print the result
+    printf("%d ", number_vertices);
+    for(i=0;i<number_vertices;i++){
+        printf("%d ", vertex_cover_subset[i]);
+    }
+    printf("\n");
+
+    //free the dynamic resources
+    free_adjacent_matrix(node_number, edge_covered);
+    free(vertex_cover_subset);
+    free(vertex_set);
+    free(edges);
+}
+
+
+//find the minimal set of vertices that cover all the edges
 void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_matrix){
     //number of vertices in the set
     int number_vertices;
@@ -345,6 +425,8 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 
     //coordinate of edge
     Coordinate temp_coord;
+
+    double start_time = omp_get_wtime();
 
     //record the current vertex set
     int *vertex_set = (int*)malloc(sizeof(int) * node_number);
@@ -378,15 +460,22 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 
     }
 
+    double end_time = omp_get_wtime();
+
+    //print time
+    printf("%f ",end_time-start_time);
 
     // print the result
     printf("%d ", number_vertices);
-
     for(i=0;i<number_vertices;i++){
         printf("%d ", vertex_cover_subset[i]);
     }
+    printf("\n");
 
     //free the dynamic resources
+    free_adjacent_matrix(node_number, edge_covered);
+    free(vertex_cover_subset);
+    free(vertex_set);
     free(edges);
 }
 
@@ -394,15 +483,13 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 /**
  * find the vertex cover (return null if not found)
 */
-int* recursive_find_vertex_cover(int node_number, Coordinate *edges, 
+int *recursive_find_vertex_cover(int node_number, Coordinate *edges, 
                                 int edge_number,  int **adjacent_matrix,
                                 int **edge_covered, 
                                 int current_subset_node, 
                                 int subset_node_number, int *vertex_subset){
     int i;
     int *current_vertex_subset, **current_edge_covered;
-    // temp vertex cover (might be NULL)
-    int *temp_vertex_cover_subset;
     // the valid vertex cover
     int *vertex_cover_subset = NULL;
 
@@ -436,18 +523,94 @@ int* recursive_find_vertex_cover(int node_number, Coordinate *edges,
         memcpy(current_vertex_subset, vertex_subset, sizeof(int) * (current_subset_node));
         current_vertex_subset[current_subset_node] = i;
 
-        temp_vertex_cover_subset = recursive_find_vertex_cover(node_number, 
+        vertex_cover_subset = recursive_find_vertex_cover(node_number, 
                                 edges, edge_number, adjacent_matrix,
                                 current_edge_covered, current_subset_node+1, 
                                 subset_node_number, current_vertex_subset);
-
-        if(temp_vertex_cover_subset != NULL){
-            vertex_cover_subset = temp_vertex_cover_subset;
-        }
         
         // free the temp data
         free_adjacent_matrix(node_number, current_edge_covered);
         free(current_vertex_subset);
+
+        
+
+    }
+
+    // return NULL (did not found valid vertex cover)
+    return vertex_cover_subset;
+
+}
+
+/**
+ * find the vertex cover in parallel(return null if not found)
+*/
+int *recursive_find_vertex_cover_par(int node_number, Coordinate *edges, 
+                                int edge_number,  int **adjacent_matrix,
+                                int **edge_covered, 
+                                int current_subset_node, 
+                                int subset_node_number, int *vertex_subset, 
+                                int depth){
+    int i;
+    int *current_vertex_subset, **current_edge_covered;
+    // the valid vertex cover
+    int *vertex_cover_subset = NULL;
+
+    // number of vertices which needed to be add to the subset
+    int node_left = subset_node_number - current_subset_node;
+
+    // base case
+    if(node_left == 1){
+        return last_verify(node_number, edges, edge_number,  adjacent_matrix,
+                        edge_covered, current_subset_node, subset_node_number, 
+                        vertex_subset);
+    }
+
+    // the start number of the for loop
+    int range_left;
+    //first vertex to be add to the subset
+    if(current_subset_node == 0){
+        range_left = 0;
+    }else{
+        range_left = vertex_subset[current_subset_node-1] + 1;
+    }
+    // the end number of the for loop
+    int range_right = node_number - subset_node_number + current_subset_node + 1;
+
+    for(i=range_left;i<range_right;i++){
+
+        // prepare the data for next recursion
+        current_edge_covered = copy_adjacent_matrix(node_number, edge_covered);
+        update_covered_edge(i,node_number,adjacent_matrix,current_edge_covered);
+
+        current_vertex_subset = (int *)malloc(sizeof(int) * (current_subset_node + 1));
+        memcpy(current_vertex_subset, vertex_subset, sizeof(int) * (current_subset_node));
+        current_vertex_subset[current_subset_node] = i;
+
+        #pragma omp task
+        {
+            if(depth < 5){
+                vertex_cover_subset = recursive_find_vertex_cover_par(node_number, 
+                                    edges, edge_number, adjacent_matrix,
+                                    current_edge_covered, current_subset_node+1, 
+                                    subset_node_number, current_vertex_subset, 
+                                    depth+1);
+            }else{
+                vertex_cover_subset = recursive_find_vertex_cover(node_number, 
+                                    edges, edge_number, adjacent_matrix,
+                                    current_edge_covered, current_subset_node+1, 
+                                    subset_node_number, current_vertex_subset);
+            }
+        }
+
+        
+
+        // free the temp data
+        free_adjacent_matrix(node_number, current_edge_covered);
+        free(current_vertex_subset);
+
+        if(vertex_cover_subset != NULL){
+            return vertex_cover_subset;
+        }
 
     }
 
