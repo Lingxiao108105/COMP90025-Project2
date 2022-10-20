@@ -35,9 +35,6 @@ typedef struct coordinate{
 }Coordinate;
 
 
-
-
-
 // return the minimum of two
 int min(int a, int b);
 
@@ -80,9 +77,16 @@ int pop(Queue *queue);
 //===========================================================
 //sequential algorithm
 void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_matrix);
-
+//parallel algorithm
+void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
+                        int number_thread, int skip_amount);
 
 //===========================================================
+/**
+ * increase the subset by n
+ * return FALSE if reach the end of the subset
+*/ 
+int increment_n(int *vertex_set, int subset_vertex_number, int node_number, int n);
 // increase the subset by 1
 int increment(int *vertex_set, int subset_vertex_number, int node_number);
 /**
@@ -127,6 +131,9 @@ int main(int argc, char * argv[]){
     // computation
     if(is_parallel == 0){
         sequential_vertex_cover(node_number,edge_number,adjacent_matrix);
+    }else if(is_parallel == 1){
+        parallel_vertex_cover(node_number,edge_number,adjacent_matrix, 
+                        number_thread, number_thread*4);
     }else{
         perror("is_parallel wrong!");
         exit(1);
@@ -398,7 +405,8 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 }
 
 //find the minimal set of vertices that cover all the edges
-void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_matrix){
+void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
+                        int number_thread, int skip_amount){
     //number of vertices in the set
     int number_vertices;
     int i,j,k,current_edges=0;
@@ -411,7 +419,7 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
     double start_time = omp_get_wtime();
 
     //record the current vertex set
-    int *vertex_set = (int*)malloc(sizeof(int) * node_number);
+    int *correct_vertex_set = NULL;
 
     //store the coordinates of edges into a dynamic array
     Coordinate *edges = (Coordinate *)malloc(sizeof(Coordinate) * edge_number);
@@ -429,24 +437,56 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
     // loop throught all the vertices set to find minimal vertex cover
     for(number_vertices=1;number_vertices<=node_number;number_vertices++){
 
-        // init the vertex set
-        for(i=0;i<number_vertices;i++){
-            vertex_set[i] = i;
-        }
-        // prepare for increment
-        vertex_set[number_vertices-1] -= 1;
-        
-        while(increment(vertex_set, number_vertices, node_number)){
-            if(valid_vertex_cover(node_number,edge_number, adjacent_matrix,edges,
-                                    vertex_set, number_vertices)){
-                has_found = TRUE;
-                break;
+        // #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
+        for(i=0;i<skip_amount;i++){
+
+            //record the current vertex set
+            int *vertex_set = (int*)malloc(sizeof(int) * node_number);
+            //whether the current thread found the valid vertex cover
+            int I_found = FALSE;
+
+            // init the vertex set
+            for(j=0;j<number_vertices;j++){
+                vertex_set[j] = j;
+            }
+            // prepare for increment
+            vertex_set[number_vertices-1] -= 1;
+            
+            // start with different init
+            increment_n(vertex_set, number_vertices, node_number, i);
+            
+            // do the computation
+            while(increment_n(vertex_set, number_vertices, node_number, skip_amount)){
+                if(valid_vertex_cover(node_number,edge_number, adjacent_matrix,edges,
+                                        vertex_set, number_vertices)){
+                    I_found = TRUE;
+                    has_found = TRUE;
+                    break;
+                }
+
+                // other thread might found valid vertex cover
+                if(has_found){
+                    break;
+                }
+            }
+
+            if(I_found){
+                if(correct_vertex_set == NULL){
+                    correct_vertex_set = vertex_set;
+                }else{
+                    free(vertex_set);
+                }
+            }else{
+                free(vertex_set);
             }
 
         }
+
+        // found the valid vertex cover
         if(has_found){
             break;
         }
+        
     }
 
     double end_time = omp_get_wtime();
@@ -457,16 +497,40 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
     // print the result
     printf("%d ", number_vertices);
     for(i=0;i<number_vertices;i++){
-        printf("%d ", vertex_set[i]);
+        printf("%d ", correct_vertex_set[i]);
     }
     printf("\n");
 
     //free the dynamic resources
-    free(vertex_set);
     free(edges);
 }
 
-// increase the subset by 1
+/**
+ * increase the subset by n
+ * return FALSE if reach the end of the subset
+*/ 
+int increment_n(int *vertex_set, int subset_vertex_number, int node_number, int n){
+    // remain the same
+    if(n==0){
+        return TRUE;
+    }
+
+    int i;
+    for(i=0;i<n;i++){
+        // reach the end of the subset
+        if(!increment(vertex_set, subset_vertex_number, node_number)){
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+
+}
+
+/**
+ * increase the subset by 1
+ * return FALSE if reach the end of the subset
+*/ 
 int increment(int *vertex_set, int subset_vertex_number, int node_number){
     // whether this is the last subset
     int has_next = FALSE;

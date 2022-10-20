@@ -8,3 +8,9 @@
         printf("range_left %d range_right %d \n", range_left, range_right);
 
         printf("node_left %d\n", node_left);
+
+if(omp_get_thread_num() == 0){
+printf("IMHERE1 \n");
+fflush(stdout);
+}
+
