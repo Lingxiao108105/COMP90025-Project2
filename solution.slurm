@@ -40,7 +40,7 @@ gcc -fopenmp solution.c -o solution
 #sequential
 for i in {1..10}  
 do
-./solution 0 1 < input/input25.txt >> output1Single.txt
+./solution 0 1 < input/input10.txt >> output1Single.txt
 done
 
 my-job-stats -a -n -s
