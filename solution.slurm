@@ -3,18 +3,16 @@
 # Partition for the job:
 #SBATCH --partition=physical
 
-# Multithreaded (SMP) job: must run on one node 
-#SBATCH --nodes=1
-
 # The name of the job:
-#SBATCH --job-name="single"
+#SBATCH --job-name="mpi"
 
 # Maximum number of tasks/CPU cores used by the job:
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --nodes=2
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=2
 
 # The maximum running time of the job in days-hours:mins:sec
-#SBATCH --time=0-03:00:00
+#SBATCH --time=0-00:03:00
 
 # The project ID which this job should run under:
 #SBATCH --account="punim0520"
@@ -29,18 +27,21 @@
 #SBATCH --mail-type=END
 
 #output file
-#SBATCH --output=output1Single.txt
+#SBATCH --output=output10MPI.txt
 
 # The modules to load:
-module load gcc/11.2.0
+module load gcc/11.2.0 
+module load openmpi/4.1.1
 
 # compile
-gcc -fopenmp solution.c -o solution
+mpicc -fopenmp solution.c -o solution
 
 #sequential
-for i in {1..10}  
-do
-./solution 0 1 < input/input10.txt >> output1Single.txt
-done
+# for i in {1..10}  
+# do
+# ./solution 0 1 < input/input10.txt >> output10MPI.txt
+# done
+
+srun -n 2 ./solution 2 2 < input/input25.txt
 
 my-job-stats -a -n -s

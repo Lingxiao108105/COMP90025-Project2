@@ -6,9 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <omp.h>
 #include <string.h>
+#include <mpi.h>
 
+#include "omp.h"
+
+#define PRINT 2
 #define TRUE 1
 #define FALSE 0
 
@@ -80,6 +83,9 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 //parallel algorithm
 void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
                         int number_thread, int skip_amount);
+//find the minimal set of vertices that cover all the edges
+void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
+                        int number_thread, int skip_amount);
 
 //===========================================================
 /**
@@ -108,6 +114,9 @@ void update_covered_edge(int added_node,int node_number, int** adjacent_matrix, 
 // read
 int main(int argc, char * argv[]){
 
+    // initialize mpi
+    MPI_Init(&argc, &argv);
+
     int node_number,edge_number,is_parallel,number_thread;
     int **adjacent_matrix;
 
@@ -119,13 +128,16 @@ int main(int argc, char * argv[]){
     is_parallel = atoi(argv[1]);
     number_thread = atoi(argv[2]);
 
-    //scan the input
+    // scan the input
     adjacent_matrix = read_adjacent_matrix(&node_number,&edge_number);
 
-    //print number of node and edge
-    printf("%d %d ",node_number,edge_number);
+    // do not print when there are multiple nodes
+    if(is_parallel != 2){
+        // print number of node and edge
+        printf("%d %d ",node_number,edge_number);
+    }
 
-    //set number of threads
+    // set number of threads
     omp_set_num_threads(number_thread);
 
     // computation
@@ -133,16 +145,20 @@ int main(int argc, char * argv[]){
         sequential_vertex_cover(node_number,edge_number,adjacent_matrix);
     }else if(is_parallel == 1){
         parallel_vertex_cover(node_number,edge_number,adjacent_matrix, 
-                        number_thread, number_thread*4);
+                        number_thread, number_thread);
+    }else if(is_parallel == 2){
+        mpi_vertex_cover(node_number,edge_number,adjacent_matrix, 
+                        number_thread, number_thread);
     }else{
         perror("is_parallel wrong!");
         exit(1);
     }
 
-
-
     //free the matrix
     free_adjacent_matrix(node_number,adjacent_matrix);
+
+    // finish MPI
+    MPI_Finalize();
 
     return 0;
 
@@ -222,8 +238,6 @@ int **create_adjacent_matrix(int node_number){
     return adjacent_matrix;
 
 }
-
-
 
 //free the adjacent matrix
 void free_adjacent_matrix(int node_number, int** adjacent_matrix){
@@ -437,7 +451,7 @@ void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matri
     // loop throught all the vertices set to find minimal vertex cover
     for(number_vertices=1;number_vertices<=node_number;number_vertices++){
 
-        // #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
+        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
         for(i=0;i<skip_amount;i++){
 
             //record the current vertex set
@@ -502,7 +516,166 @@ void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matri
     printf("\n");
 
     //free the dynamic resources
+    free(correct_vertex_set);
     free(edges);
+}
+
+//find the minimal set of vertices that cover all the edges
+void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
+                        int number_thread, int skip_amount){
+
+    // mpi objects 
+    int world_rank, world_size;
+    // whether receive a message
+    int flag;
+    MPI_Status status;
+    // store whether the corresponding node find the vertex cover
+    int *has_found_node = (int*)malloc(sizeof(int) * world_size);
+
+
+    //number of vertices in the set
+    int number_vertices;
+    int i,j,k,current_edges=0;
+    // whether found the minial vertex cover
+    int has_found = FALSE;
+
+    //coordinate of edge
+    Coordinate temp_coord;
+
+    double start_time = omp_get_wtime();
+
+    //get the rank and size
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    //update skip amount
+    skip_amount *= world_size;
+
+    printf("world_size %d ", world_size);
+
+    //record the current vertex set
+    int *correct_vertex_set = NULL;
+
+    //store the coordinates of edges into a dynamic array
+    Coordinate *edges = (Coordinate *)malloc(sizeof(Coordinate) * edge_number);
+    for(i=0;i<node_number;i++){
+        for(j=i;j<node_number;j++){
+            if(adjacent_matrix[i][j] != 0){
+                temp_coord.x = i;
+                temp_coord.y = j;
+                edges[current_edges] = temp_coord;
+                current_edges++;
+            }
+        }
+    }
+
+    // loop throught all the vertices set to find minimal vertex cover
+    for(number_vertices=1;number_vertices<=node_number;number_vertices++){
+
+        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
+        for(i=world_rank;i<skip_amount;i+=world_size){
+
+            //record the current vertex set
+            int *vertex_set = (int*)malloc(sizeof(int) * node_number);
+            //whether the current thread found the valid vertex cover
+            int I_found = FALSE;
+
+            // init the vertex set
+            for(j=0;j<number_vertices;j++){
+                vertex_set[j] = j;
+            }
+            // prepare for increment
+            vertex_set[number_vertices-1] -= 1;
+            
+            // start with different init
+            increment_n(vertex_set, number_vertices, node_number, i);
+            
+            // do the computation
+            while(increment_n(vertex_set, number_vertices, node_number, skip_amount)){
+                if(valid_vertex_cover(node_number,edge_number, adjacent_matrix,edges,
+                                        vertex_set, number_vertices)){
+                    I_found = TRUE;
+                    has_found = TRUE;
+                    break;
+                }
+
+                // other thread might found valid vertex cover
+                if(has_found){
+                    break;
+                }
+            }
+
+            if(I_found){
+                if(correct_vertex_set == NULL){
+                    correct_vertex_set = vertex_set;
+                }else{
+                    free(vertex_set);
+                }
+            }else{
+                free(vertex_set);
+            }
+
+        }
+
+        // every process need to complete its work on current number of subset
+        // find whether a node find the answer
+        MPI_Gather(&has_found, 1, MPI_INT, has_found_node, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        // check whether the vertex cover is found and decide which proces print the result
+        if(world_rank == 0){
+            //whether the vertex cover has been found
+            for(i=0;i<world_size;i++){
+                if(has_found_node[i]){
+                    has_found = TRUE;
+                    break;
+                }
+            }
+            // tell every node the vertex cover if vertex cover has been found 
+            if(has_found){
+                for(j=0;j<world_size;j++){
+                    has_found_node[j] = TRUE;
+                }
+                // tell the node who found it to print the result
+                has_found_node[i] = PRINT;
+            }
+        }
+
+        // the process 0 broadcast whether the process found the answer
+        // and which process print the output
+        MPI_Scatter(has_found_node, 1, MPI_INT, &has_found, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        // found the valid vertex cover
+        if(has_found){
+            break;
+        }
+        
+    }
+
+    double end_time = omp_get_wtime();
+
+    // the process is response for print the result
+    if(has_found == PRINT){
+
+        // print number of node and edge
+        printf("%d %d ",node_number,edge_number);
+
+        //print time
+        printf("%f ",end_time-start_time);
+
+        // print the result
+        printf("%d ", number_vertices);
+        for(i=0;i<number_vertices;i++){
+            printf("%d ", correct_vertex_set[i]);
+        }
+        printf("\n");
+    }
+
+    
+
+    //free the dynamic resources
+    free(correct_vertex_set);
+    free(edges);
+    
 }
 
 /**

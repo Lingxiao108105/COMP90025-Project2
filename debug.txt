@@ -14,3 +14,5 @@ printf("IMHERE1 \n");
 fflush(stdout);
 }
 
+    printf("\nworld_rank %d world_size %d\n", world_rank, world_size);
+
