@@ -4,15 +4,15 @@
 #SBATCH --partition=physical
 
 # The name of the job:
-#SBATCH --job-name="mpi"
+#SBATCH --job-name="parallel"
 
 # Maximum number of tasks/CPU cores used by the job:
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=16
 
 # The maximum running time of the job in days-hours:mins:sec
-#SBATCH --time=0-00:30:00
+#SBATCH --time=0-10:00:00
 
 # The project ID which this job should run under:
 #SBATCH --account="punim0520"
@@ -27,7 +27,7 @@
 #SBATCH --mail-type=END
 
 #output file
-#SBATCH --output=output25Single.out
+#SBATCH --output=output/output30par_all.out
 
 # The modules to load:
 module load gcc/11.2.0 
@@ -37,11 +37,11 @@ module load openmpi/4.1.1
 mpicc -fopenmp solution.c -o solution
 
 #sequential
-for i in {1..10}  
+for thread_number in {1..16}
 do
-./solution 0 1 input/input25.txt
+    for i in {1..5}  
+    do
+    srun -n 1 ./solution 1 $thread_number input/input30.txt
+    done
 done
-
-
-
 my-job-stats -a -n -s

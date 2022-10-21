@@ -133,8 +133,8 @@ int main(int argc, char * argv[]){
 
     // do not print when there are multiple nodes
     if(is_parallel != 2){
-        // print number of node and edge
-        printf("%d %d ",node_number,edge_number);
+        // print number of node, edge and thread 
+        printf("%d %d %d ",node_number,edge_number, number_thread);
     }
 
     // set number of threads
@@ -658,8 +658,8 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
     // the process is response for print the result
     if(has_found == PRINT){
 
-        // print number of node and edge
-        printf("%d %d ",node_number,edge_number);
+        // print number of node, edge and thread 
+        printf("%d %d %d ",node_number,edge_number, number_thread);
 
         //print time
         printf("%f ",end_time-start_time);

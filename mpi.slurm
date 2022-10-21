@@ -7,12 +7,12 @@
 #SBATCH --job-name="mpi"
 
 # Maximum number of tasks/CPU cores used by the job:
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
+#SBATCH --nodes=16
+#SBATCH --ntasks=16
 #SBATCH --cpus-per-task=1
 
 # The maximum running time of the job in days-hours:mins:sec
-#SBATCH --time=0-00:30:00
+#SBATCH --time=0-05:00:00
 
 # The project ID which this job should run under:
 #SBATCH --account="punim0520"
@@ -27,7 +27,7 @@
 #SBATCH --mail-type=END
 
 #output file
-#SBATCH --output=output25Single.out
+#SBATCH --output=output/output30mpi.out
 
 # The modules to load:
 module load gcc/11.2.0 
@@ -39,9 +39,7 @@ mpicc -fopenmp solution.c -o solution
 #sequential
 for i in {1..10}  
 do
-./solution 0 1 input/input25.txt
+srun -n 16 ./solution 2 1 input/input30.txt
 done
-
-
 
 my-job-stats -a -n -s
