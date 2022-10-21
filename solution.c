@@ -15,7 +15,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#define NUM_CONFIGURATION 2
+#define NUM_CONFIGURATION 3
 
 
 // Node of linked list
@@ -47,7 +47,7 @@ int min(int a, int b);
  * read adjacent matrix from input
  * return adjacent matrix
  */
-int **read_adjacent_matrix(int *node_number, int *edge_number);
+int **read_adjacent_matrix(int *node_number, int *edge_number, char *filename);
 /**
  * copy an adjacent matrix
  */
@@ -129,7 +129,7 @@ int main(int argc, char * argv[]){
     number_thread = atoi(argv[2]);
 
     // scan the input
-    adjacent_matrix = read_adjacent_matrix(&node_number,&edge_number);
+    adjacent_matrix = read_adjacent_matrix(&node_number,&edge_number, argv[3]);
 
     // do not print when there are multiple nodes
     if(is_parallel != 2){
@@ -176,19 +176,22 @@ int min(int a, int b){
  * read adjacent matrix from input
  * return adjacent matrix
  */
-int **read_adjacent_matrix(int *node_number, int *edge_number){
+int **read_adjacent_matrix(int *node_number, int *edge_number, char *filename){
     // store input edge u->v with capactiy
     int u,v,current_edge_number = 0;
     int **adjacent_matrix;
     int i;
+    FILE *input;
+
+    input = fopen(filename, "r");
 
     //scan the number of node
-    scanf("%d\n", node_number);
+    fscanf(input, "%d\n", node_number);
 
     adjacent_matrix = create_adjacent_matrix(*node_number);
 
     //read the edges
-    while(scanf("%d %d\n", &u,&v) == 2){
+    while(fscanf(input, "%d %d\n", &u,&v) == 2){
         adjacent_matrix[u][v] = 1;
         adjacent_matrix[v][u] = 1;
         current_edge_number++;
@@ -530,8 +533,7 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
     int flag;
     MPI_Status status;
     // store whether the corresponding node find the vertex cover
-    int *has_found_node = (int*)malloc(sizeof(int) * world_size);
-
+    int *has_found_node;
 
     //number of vertices in the set
     int number_vertices;
@@ -548,10 +550,10 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
+    has_found_node = (int*)malloc(sizeof(int) * world_size);
+
     //update skip amount
     skip_amount *= world_size;
-
-    printf("world_size %d ", world_size);
 
     //record the current vertex set
     int *correct_vertex_set = NULL;
