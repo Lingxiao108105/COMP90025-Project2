@@ -131,6 +131,9 @@ int compare_ring_info(int* a, int* b);
 // read
 int main(int argc, char * argv[]){
 
+    // initialize mpi
+    MPI_Init(&argc, &argv);
+
     int node_number,edge_number,is_parallel,number_thread;
     int **adjacent_matrix;
 
@@ -149,9 +152,6 @@ int main(int argc, char * argv[]){
     if(is_parallel < 2){
         // print number of node, edge node number and thread 
         printf("%d %d 1 %d ",node_number,edge_number, number_thread);
-    }else{
-        // initialize mpi
-        MPI_Init(&argc, &argv);
     }
 
     // set number of threads
@@ -176,10 +176,9 @@ int main(int argc, char * argv[]){
 
     //free the matrix
     free_adjacent_matrix(node_number,adjacent_matrix);
-    if(is_parallel >= 2){
-        // finish MPI
-        MPI_Finalize();
-    }
+
+    // finish MPI
+    MPI_Finalize();
 
     return 0;
 
