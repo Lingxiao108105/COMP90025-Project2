@@ -1,2 +1,0 @@
-/var/spool/slurm/job41027139/slurm_script: line 40: syntax error near unexpected token `('
-/var/spool/slurm/job41027139/slurm_script: line 40: `for node in (2,4,8)'
