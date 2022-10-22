@@ -127,12 +127,12 @@ void update_covered_edge(int added_node,int node_number, int** adjacent_matrix, 
 */
 int compare_ring_info(int* a, int* b);
 
+double communication_time = 0;
+double work_time = 0;
+
 
 // read
 int main(int argc, char * argv[]){
-
-    // initialize mpi
-    MPI_Init(&argc, &argv);
 
     int node_number,edge_number,is_parallel,number_thread;
     int **adjacent_matrix;
@@ -151,7 +151,10 @@ int main(int argc, char * argv[]){
     // do not print when there are multiple nodes
     if(is_parallel < 2){
         // print number of node, edge node number and thread 
-        printf("%d %d 1 %d ",node_number,edge_number, number_thread);
+        printf("%d %d 1 %d \n",node_number,edge_number, number_thread);
+    }else{
+        // initialize mpi
+        MPI_Init(&argc, &argv);
     }
 
     // set number of threads
@@ -176,9 +179,10 @@ int main(int argc, char * argv[]){
 
     //free the matrix
     free_adjacent_matrix(node_number,adjacent_matrix);
-
-    // finish MPI
-    MPI_Finalize();
+    if(is_parallel >= 2){
+        // finish MPI
+        MPI_Finalize();
+    }
 
     return 0;
 
@@ -591,6 +595,8 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
     // loop throught all the vertices set to find minimal vertex cover
     for(number_vertices=1;number_vertices<=node_number;number_vertices++){
 
+        work_time -= omp_get_wtime();
+
         #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
         for(i=world_rank;i<skip_amount;i+=world_size){
 
@@ -636,6 +642,10 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
 
         }
 
+        work_time += omp_get_wtime();
+
+        communication_time -= omp_get_wtime();
+
         // every process need to complete its work on current number of subset
         // find whether a node find the answer
         MPI_Gather(&has_found, 1, MPI_INT, has_found_node, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -663,6 +673,8 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
         // and which process print the output
         MPI_Scatter(has_found_node, 1, MPI_INT, &has_found, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+        communication_time += omp_get_wtime();
+
         // found the valid vertex cover
         if(has_found){
             break;
@@ -676,7 +688,10 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
     if(has_found == PRINT){
 
         // print number of node, edge node number and thread 
-        printf("%d %d %d %d ",node_number,edge_number, world_size, number_thread);
+        printf("%d %d %d %d \n",node_number,edge_number, world_size, number_thread);
+
+        printf("work time %f \n", work_time);
+        printf("communication time %f \n", communication_time);
 
         //print time
         printf("%f ",end_time-start_time);
@@ -771,6 +786,8 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
     // the vertex set which has been found
     for(number_vertices=1;number_vertices<current_ring_data[1];number_vertices++){
 
+        work_time -= omp_get_wtime();
+
         #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set, flag, status, temp_ring_data, current_ring_data, hold, other_has_found, buffer_attached)
         for(i=world_rank;i<skip_amount;i+=world_size){
 
@@ -846,8 +863,13 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 
         }       
 
+        work_time += omp_get_wtime();
+
         // found the valid vertex cover
         if(has_found && !other_has_found){
+
+            communication_time -= omp_get_wtime();
+
             // hold the smaller ring data
             temp_ring_data[0] = world_rank;
             temp_ring_data[1] = number_vertices;
@@ -861,6 +883,8 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
                 // send out election message to next process
                 MPI_Bsend(current_ring_data, 3, MPI_INT, (world_rank+1)%world_size, 0, MPI_COMM_WORLD);
             }
+
+            communication_time += omp_get_wtime();
             break;
         }
         if(other_has_found){
@@ -868,6 +892,8 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
         }
         
     }
+
+    communication_time -= omp_get_wtime();
 
     if(hold){
         MPI_Bsend(current_ring_data, 3, MPI_INT, (world_rank+1)%world_size, 0, MPI_COMM_WORLD);
@@ -901,6 +927,8 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
             MPI_Send(current_ring_data, 3, MPI_INT, (world_rank+1)%world_size, 0, MPI_COMM_WORLD);
         }
     }
+
+    communication_time += omp_get_wtime();
     
 
     double end_time = omp_get_wtime();
@@ -909,7 +937,10 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
     if(leader == TRUE){
 
         // print number of node, edge node number and thread 
-        printf("%d %d %d %d ",node_number,edge_number, world_size, number_thread);
+        printf("%d %d %d %d \n",node_number,edge_number, world_size, number_thread);
+
+        printf("work time %f \n", work_time);
+        printf("communication time %f \n", communication_time);
 
         //print time
         printf("%f ",end_time-start_time);
