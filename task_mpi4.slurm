@@ -2,6 +2,7 @@
 
 # Partition for the job:
 #SBATCH --partition=physical
+#SBATCH --constraint=physg5
 
 # The name of the job:
 #SBATCH --job-name="mpi"
@@ -9,7 +10,7 @@
 # Maximum number of tasks/CPU cores used by the job:
 #SBATCH --nodes=4
 #SBATCH --ntasks=4
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=4
 
 # The maximum running time of the job in days-hours:mins:sec
 #SBATCH --time=0-01:00:00

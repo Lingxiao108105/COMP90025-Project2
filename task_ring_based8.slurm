@@ -2,6 +2,7 @@
 
 # Partition for the job:
 #SBATCH --partition=physical
+#SBATCH --constraint=physg5
 
 # The name of the job:
 #SBATCH --job-name="ring_based8node"

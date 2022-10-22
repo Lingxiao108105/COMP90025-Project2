@@ -2,6 +2,7 @@
 
 # Partition for the job:
 #SBATCH --partition=physical
+#SBATCH --constraint=physg5
 
 # The name of the job:
 #SBATCH --job-name="parallel"
@@ -37,11 +38,14 @@ module load openmpi/4.1.1
 mpicc -fopenmp solution.c -o solution
 
 #sequential
-for thread_number in {2..16}
-do
-    for i in {1..5}  
-    do
-    srun -n 1 ./solution 1 $thread_number input/input30.txt
-    done
-done
+# for thread_number in {2..16}
+# do
+#     for i in {1..5}  
+#     do
+#     srun -n 1 ./solution 1 $thread_number input/input30.txt
+#     done
+# done
+
+./solution 1 64 input/input30.txt
+
 my-job-stats -a -n -s

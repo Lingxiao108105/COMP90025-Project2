@@ -1,0 +1,70 @@
+world rank 0 work time 177.596665 communication time 0.000282 blocking time 0.006543 
+world rank 1 work time 161.351609 communication time 0.000544 blocking time 16.250738 
+30 39 2 8 177.603511 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 174.784026 communication time 0.000536 blocking time 1.119485 
+world rank 1 work time 155.578149 communication time 0.000808 blocking time 20.324929 
+30 39 2 8 175.904070 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 175.135917 communication time 0.000290 blocking time 0.007739 
+world rank 1 work time 154.899473 communication time 0.000885 blocking time 20.243437 
+30 39 2 8 175.143968 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 197.353674 communication time 0.000374 blocking time 0.005825 
+world rank 1 work time 156.248797 communication time 0.000325 blocking time 41.110465 
+30 39 2 8 197.359894 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 196.842081 communication time 0.000489 blocking time 0.009670 
+world rank 1 work time 157.790670 communication time 0.000317 blocking time 39.061028 
+30 39 2 8 196.852263 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 170.434056 communication time 0.000286
+world rank 1 work time 166.150802 communication time 4.282877
+30 39 2 8 170.433708 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 0 work time 191.245058 communication time 0.000458
+world rank 1 work time 162.791982 communication time 28.453490
+30 39 2 8 191.245514 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 0 work time 167.975093 communication time 0.000458
+world rank 1 work time 167.603551 communication time 0.375969
+30 39 2 8 167.979567 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 0 work time 179.604708 communication time 0.004263
+world rank 1 work time 151.932338 communication time 27.676267
+30 39 2 8 179.608651 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 0 work time 168.232765 communication time 0.000233
+world rank 1 work time 164.261777 communication time 3.970833
+30 39 2 8 168.232640 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+Job ID           : 41036223
+Cluster          : spartan
+User/Project     : lingxiao1/punim0520
+Nodes            : 2
+Wall-clock time  : 00:30:20 / 01:00:00
+
+Displaying overall resources usage from 2022-10-22 22:16:41 to 2022-10-22 22:47:01:
+
+NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
+
+spartan-bm006 : 
+                CPU# 1    : 81.8   (  81.7 /   0.0 /   0.0 /  18.2 ) 
+                CPU# 2    : 80.8   (  80.8 /   0.0 /   0.0 /  19.2 ) 
+                CPU# 3    : 73.5   (  73.4 /   0.2 /   0.0 /  26.5 ) 
+                CPU# 4    : 32.9   (  32.4 /   0.5 /   0.4 /  66.7 ) 
+                CPU# 5    : 54.5   (  54.2 /   0.4 /   0.2 /  45.3 ) 
+                CPU# 6    : 45.0   (  44.7 /   0.4 /   0.2 /  54.7 ) 
+                CPU# 7    : 53.2   (  53.0 /   0.2 /   0.1 /  46.7 ) 
+                CPU# 8    : 57.9   (  57.7 /   0.3 /   0.1 /  42.0 ) 
+
+spartan-bm029 : 
+                CPU# 9    : 62.5   (  62.3 /   0.2 /   0.0 /  37.5 ) 
+                CPU# 10   : 68.4   (  68.1 /   0.3 /   0.0 /  31.6 ) 
+                CPU# 11   : 61.4   (  61.1 /   0.3 /   0.0 /  38.6 ) 
+                CPU# 12   : 66.7   (  66.5 /   0.2 /   0.0 /  33.3 ) 
+                CPU# 13   : 66.4   (  66.2 /   0.2 /   0.0 /  33.6 ) 
+                CPU# 14   : 59.6   (  59.3 /   0.2 /   0.0 /  40.4 ) 
+                CPU# 15   : 56.7   (  56.5 /   0.2 /   0.0 /  43.3 ) 
+                CPU# 16   : 63.3   (  63.0 /   0.2 /   0.0 /  36.7 ) 
+
+
+Allocated CPUs            : 16   
+  CPUs with usage <25%    : 0    
+  CPUs with usage <50%    : 2    
+  CPUs with usage >50%    : 14   
+
+Memory used (RAM)         : 0.0%  [4MB of 64000MB]
+
+--------------------------------------------
+

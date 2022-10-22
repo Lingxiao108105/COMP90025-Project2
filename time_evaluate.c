@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <string.h>
 #include <mpi.h>
+#include <unistd.h>
 
 #include "omp.h"
 
@@ -129,6 +130,7 @@ int compare_ring_info(int* a, int* b);
 
 double communication_time = 0;
 double work_time = 0;
+double blocking_time = 0;
 
 
 // read
@@ -644,6 +646,10 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
 
         work_time += omp_get_wtime();
 
+        blocking_time -= omp_get_wtime();
+        MPI_Barrier(MPI_COMM_WORLD);
+        blocking_time += omp_get_wtime();
+
         communication_time -= omp_get_wtime();
 
         // every process need to complete its work on current number of subset
@@ -684,14 +690,16 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
 
     double end_time = omp_get_wtime();
 
+    printf("world rank %d work time %f communication time %f blocking time %f \n", world_rank, work_time, communication_time, blocking_time);
+    fflush(stdout);
+    MPI_Barrier(MPI_COMM_WORLD);
+    sleep(1);
+
     // the process is response for print the result
     if(has_found == PRINT){
 
         // print number of node, edge node number and thread 
-        printf("%d %d %d %d \n",node_number,edge_number, world_size, number_thread);
-
-        printf("work time %f \n", work_time);
-        printf("communication time %f \n", communication_time);
+        printf("%d %d %d %d ",node_number,edge_number, world_size, number_thread);
 
         //print time
         printf("%f ",end_time-start_time);
@@ -935,14 +943,16 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 
     double end_time = omp_get_wtime();
 
+    printf("world rank %d work time %f communication time %f\n", world_rank, work_time, communication_time);
+    fflush(stdout);
+    MPI_Barrier(MPI_COMM_WORLD);
+    sleep(1);
+
     // the process is response for print the result
     if(leader == TRUE){
 
         // print number of node, edge node number and thread 
-        printf("%d %d %d %d \n",node_number,edge_number, world_size, number_thread);
-
-        printf("work time %f \n", work_time);
-        printf("communication time %f \n", communication_time);
+        printf("%d %d %d %d ",node_number,edge_number, world_size, number_thread);
 
         //print time
         printf("%f ",end_time-start_time);

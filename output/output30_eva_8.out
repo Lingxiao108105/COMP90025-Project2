@@ -1,0 +1,144 @@
+world rank 0 work time 77.464105 communication time 0.004374 blocking time 45.868464 
+world rank 2 work time 117.893509 communication time 0.000501 blocking time 5.439807 
+world rank 7 work time 98.809827 communication time 0.004648 blocking time 24.519966 
+world rank 1 work time 80.085448 communication time 0.004532 blocking time 43.243278 
+world rank 6 work time 97.325803 communication time 0.000587 blocking time 26.007160 
+world rank 5 work time 81.996591 communication time 0.004623 blocking time 41.333318 
+world rank 3 work time 72.257927 communication time 0.004602 blocking time 51.069913 
+world rank 4 work time 121.953810 communication time 0.004478 blocking time 1.376094 
+30 39 8 2 123.336961 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 3 work time 73.040677 communication time 0.000927 blocking time 58.556974 
+world rank 0 work time 77.635766 communication time 0.001324 blocking time 53.961509 
+world rank 4 work time 119.831895 communication time 0.001275 blocking time 11.765099 
+world rank 6 work time 97.393404 communication time 0.001180 blocking time 34.203669 
+world rank 1 work time 93.271026 communication time 0.000672 blocking time 38.327237 
+world rank 5 work time 77.325807 communication time 0.000636 blocking time 54.271920 
+world rank 7 work time 95.688760 communication time 0.000857 blocking time 35.908943 
+world rank 2 work time 121.981904 communication time 0.001248 blocking time 9.615131 
+30 39 8 2 131.598616 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 78.143432 communication time 0.001117 blocking time 45.136200 
+world rank 1 work time 83.347847 communication time 0.004762 blocking time 39.932461 
+world rank 2 work time 119.516991 communication time 0.000883 blocking time 3.777683 
+world rank 6 work time 97.527931 communication time 0.000833 blocking time 25.766159 
+world rank 3 work time 73.406861 communication time 0.001400 blocking time 49.886802 
+world rank 7 work time 95.027333 communication time 0.001334 blocking time 28.266193 
+world rank 5 work time 76.783102 communication time 0.001148 blocking time 46.510693 
+world rank 4 work time 120.406494 communication time 0.001133 blocking time 2.887726 
+30 39 8 2 123.280784 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 6 work time 106.796269 communication time 0.006169 blocking time 21.266424 
+world rank 4 work time 118.521845 communication time 0.000894 blocking time 9.547245 
+world rank 5 work time 77.472968 communication time 0.010383 blocking time 50.586789 
+world rank 0 work time 76.388868 communication time 0.000725 blocking time 51.680952 
+world rank 1 work time 82.126507 communication time 0.010361 blocking time 45.933529 
+world rank 3 work time 72.635532 communication time 0.010871 blocking time 55.422486 
+world rank 2 work time 126.905129 communication time 0.006280 blocking time 1.147272 
+world rank 7 work time 94.478745 communication time 0.010768 blocking time 33.580566 
+30 39 8 2 128.070564 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+srun: Job 41036960 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 41036960
+world rank 1 work time 85.949039 communication time 0.000685 blocking time 42.041694 
+world rank 6 work time 111.177407 communication time 0.001650 blocking time 16.821432 
+world rank 5 work time 77.774264 communication time 0.000694 blocking time 50.226945 
+world rank 0 work time 76.591279 communication time 0.001726 blocking time 51.409173 
+world rank 2 work time 118.518013 communication time 0.001595 blocking time 9.480982 
+world rank 3 work time 72.878720 communication time 0.000771 blocking time 55.122617 
+world rank 7 work time 96.566677 communication time 0.000806 blocking time 31.432852 
+world rank 4 work time 118.965529 communication time 0.001765 blocking time 9.033065 
+30 39 8 2 128.002195 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 79.025169 communication time 9.352364
+world rank 7 work time 78.998448 communication time 9.383924
+world rank 6 work time 78.981321 communication time 9.404504
+world rank 4 work time 79.740690 communication time 8.644831
+world rank 1 work time 88.358770 communication time 0.026687
+world rank 5 work time 78.831846 communication time 9.553474
+world rank 3 work time 72.813353 communication time 15.577624
+world rank 2 work time 88.382601 communication time 0.008489
+30 39 8 2 88.391000 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 1 work time 80.906592 communication time 8.032112
+world rank 0 work time 77.648313 communication time 11.298670
+world rank 3 work time 72.687767 communication time 16.258743
+world rank 2 work time 88.936799 communication time 0.009970
+world rank 4 work time 79.066342 communication time 9.875541
+world rank 5 work time 79.091604 communication time 9.849629
+world rank 6 work time 79.113252 communication time 9.828588
+world rank 7 work time 79.142808 communication time 9.804489
+30 39 8 2 88.947026 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 1 work time 84.480358 communication time 0.106505
+world rank 0 work time 78.083488 communication time 6.506861
+world rank 5 work time 78.458692 communication time 6.131392
+world rank 6 work time 78.483474 communication time 6.106800
+world rank 2 work time 84.580400 communication time 0.010206
+world rank 3 work time 72.307751 communication time 12.282563
+world rank 4 work time 78.425485 communication time 6.165250
+world rank 7 work time 78.503505 communication time 6.086905
+30 39 8 2 84.590369 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 1 work time 81.646098 communication time 2.254267
+world rank 3 work time 72.245480 communication time 11.657132
+world rank 0 work time 77.717600 communication time 6.197633
+world rank 6 work time 79.577130 communication time 4.324788
+world rank 4 work time 80.253547 communication time 3.648416
+world rank 2 work time 83.896394 communication time 0.006645
+world rank 7 work time 79.597534 communication time 4.304461
+world rank 5 work time 79.425202 communication time 4.476611
+30 39 8 2 83.915254 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 76.822752 communication time 5.504102
+world rank 4 work time 76.721384 communication time 5.603932
+world rank 1 work time 81.448848 communication time 0.877781
+world rank 6 work time 76.770993 communication time 5.554213
+world rank 5 work time 76.746916 communication time 5.578495
+world rank 7 work time 76.791116 communication time 5.534452
+world rank 3 work time 72.287583 communication time 10.044698
+world rank 2 work time 82.321362 communication time 0.010266
+30 39 8 2 82.332319 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+Job ID           : 41036960
+Cluster          : spartan
+User/Project     : lingxiao1/punim0520
+Nodes            : 8
+Wall-clock time  : 00:18:04 / 01:00:00
+
+Displaying overall resources usage from 2022-10-22 23:02:33 to 2022-10-22 23:20:37:
+
+NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
+
+spartan-bm001 : 
+                CPU# 1    : 86.0   (  85.5 /   0.5 /   0.0 /  14.0 ) 
+                CPU# 2    : 82.4   (  81.8 /   0.5 /   0.0 /  17.6 ) 
+
+spartan-bm003 : 
+                CPU# 3    : 88.7   (  88.5 /   0.1 /   0.0 /  11.3 ) 
+                CPU# 4    : 78.7   (  78.6 /   0.1 /   0.0 /  21.3 ) 
+
+spartan-bm004 : 
+                CPU# 5    : 91.2   (  90.8 /   0.4 /   0.0 /   8.8 ) 
+                CPU# 6    : 93.3   (  93.0 /   0.4 /   0.0 /   6.7 ) 
+
+spartan-bm006 : 
+                CPU# 7    : 81.3   (  81.1 /   0.2 /   0.0 /  18.7 ) 
+                CPU# 8    : 86.2   (  86.0 /   0.2 /   0.0 /  13.8 ) 
+
+spartan-bm010 : 
+                CPU# 9    : 94.5   (  89.0 /   5.5 /   0.0 /   5.5 ) 
+                CPU# 10   : 91.8   (  91.4 /   0.4 /   0.0 /   8.2 ) 
+
+spartan-bm012 : 
+                CPU# 11   : 76.5   (  76.3 /   0.2 /   0.0 /  23.5 ) 
+                CPU# 12   : 93.9   (  93.8 /   0.1 /   0.0 /   6.1 ) 
+
+spartan-bm015 : 
+                CPU# 13   : 85.8   (  85.7 /   0.1 /   0.0 /  14.2 ) 
+                CPU# 14   : 92.8   (  92.6 /   0.2 /   0.0 /   7.2 ) 
+
+spartan-bm018 : 
+                CPU# 15   : 87.3   (  87.1 /   0.2 /   0.0 /  12.7 ) 
+                CPU# 16   : 91.5   (  91.3 /   0.2 /   0.0 /   8.5 ) 
+
+
+Allocated CPUs            : 16   
+  CPUs with usage <25%    : 0    
+  CPUs with usage <50%    : 0    
+  CPUs with usage >50%    : 16   
+
+Memory used (RAM)         : 0.0%  [5MB of 64000MB]
+
+--------------------------------------------
+

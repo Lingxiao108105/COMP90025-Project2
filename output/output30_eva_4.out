@@ -1,0 +1,94 @@
+world rank 0 work time 124.631093 communication time 0.012798 blocking time 32.701081 
+world rank 2 work time 133.474183 communication time 0.020120 blocking time 23.846428 
+world rank 3 work time 118.354514 communication time 0.022348 blocking time 38.942355 
+world rank 1 work time 126.683627 communication time 0.012314 blocking time 30.648295 
+30 39 4 4 157.345036 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 2 work time 132.061533 communication time 0.004931 blocking time 27.511747 
+world rank 0 work time 129.332942 communication time 0.004876 blocking time 30.240334 
+world rank 1 work time 133.638741 communication time 0.004814 blocking time 25.934511 
+world rank 3 work time 123.527700 communication time 0.004904 blocking time 36.045455 
+30 39 4 4 159.578179 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 2 work time 134.453029 communication time 0.006713 blocking time 19.653004 
+world rank 0 work time 120.914451 communication time 0.004866 blocking time 33.193306 
+world rank 1 work time 119.679672 communication time 0.006617 blocking time 34.426179 
+world rank 3 work time 128.381834 communication time 0.004851 blocking time 25.725948 
+30 39 4 4 154.112641 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 2 work time 135.453679 communication time 0.008807 blocking time 25.162680 
+world rank 0 work time 124.971287 communication time 0.005249 blocking time 35.648600 
+world rank 1 work time 133.116821 communication time 0.008560 blocking time 27.499660 
+world rank 3 work time 128.124318 communication time 0.005245 blocking time 32.495757 
+30 39 4 4 160.625157 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 2 work time 133.026089 communication time 0.008453 blocking time 23.547976 
+world rank 0 work time 132.161153 communication time 0.004847 blocking time 24.416446 
+world rank 1 work time 121.529866 communication time 0.008629 blocking time 35.042480 
+world rank 3 work time 116.736332 communication time 0.004762 blocking time 39.841457 
+30 39 4 4 156.582467 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 0 work time 114.860822 communication time 9.734368
+world rank 1 work time 124.557932 communication time 0.035971
+world rank 2 work time 124.585858 communication time 0.011956
+world rank 3 work time 114.705432 communication time 9.892030
+30 39 4 4 124.597494 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 0 work time 115.294627 communication time 14.402894
+world rank 1 work time 129.522993 communication time 0.161660
+world rank 2 work time 129.687469 communication time 0.012280
+world rank 3 work time 115.206431 communication time 14.493179
+30 39 4 4 129.699629 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+world rank 2 work time 121.582018 communication time 0.030662
+world rank 1 work time 121.549951 communication time 0.058012
+world rank 3 work time 121.606292 communication time 0.009001
+world rank 0 work time 117.719329 communication time 3.896727
+30 39 4 4 121.616077 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 1 work time 132.172522 communication time 0.043788
+world rank 2 work time 132.196201 communication time 0.024589
+world rank 0 work time 121.072937 communication time 11.148592
+world rank 3 work time 122.354867 communication time 9.866347
+30 39 4 4 132.221549 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+world rank 1 work time 122.462143 communication time 0.033525
+world rank 2 work time 122.486194 communication time 0.011926
+world rank 0 work time 117.957526 communication time 4.541125
+world rank 3 work time 119.013452 communication time 3.484667
+30 39 4 4 122.498706 14 0 1 4 5 6 7 9 12 18 20 25 26 28 29 
+Job ID           : 41036235
+Cluster          : spartan
+User/Project     : lingxiao1/punim0520
+Nodes            : 4
+Wall-clock time  : 00:24:02 / 01:00:00
+
+Displaying overall resources usage from 2022-10-22 23:40:17 to 2022-10-23 00:04:19:
+
+NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
+
+spartan-bm025 : 
+                CPU# 1    : 72.4   (  72.3 /   0.1 /   0.0 /  27.6 ) 
+                CPU# 2    : 73.0   (  73.0 /   0.1 /   0.0 /  27.0 ) 
+                CPU# 3    : 71.1   (  71.0 /   0.1 /   0.0 /  28.9 ) 
+                CPU# 4    : 71.4   (  71.3 /   0.2 /   0.0 /  28.6 ) 
+
+spartan-bm029 : 
+                CPU# 5    : 67.7   (  67.1 /   0.6 /   0.0 /  32.3 ) 
+                CPU# 6    : 67.3   (  66.6 /   0.6 /   0.0 /  32.7 ) 
+                CPU# 7    : 76.3   (  76.0 /   0.3 /   0.0 /  23.7 ) 
+                CPU# 8    : 68.7   (  68.4 /   0.3 /   0.0 /  31.3 ) 
+
+spartan-bm039 : 
+                CPU# 9    : 74.6   (  74.6 /   0.0 /   0.0 /  25.4 ) 
+                CPU# 10   : 74.3   (  74.3 /   0.0 /   0.0 /  25.7 ) 
+                CPU# 11   : 74.5   (  74.5 /   0.0 /   0.0 /  25.5 ) 
+                CPU# 12   : 98.8   (  98.7 /   0.1 /   0.0 /   1.2 ) 
+
+spartan-bm086 : 
+                CPU# 13   : 77.8   (  77.7 /   0.1 /   0.0 /  22.2 ) 
+                CPU# 14   : 70.6   (  70.4 /   0.2 /   0.0 /  29.4 ) 
+                CPU# 15   : 70.0   (  69.8 /   0.2 /   0.0 /  30.0 ) 
+                CPU# 16   : 66.1   (  65.8 /   0.3 /   0.0 /  33.9 ) 
+
+
+Allocated CPUs            : 16   
+  CPUs with usage <25%    : 0    
+  CPUs with usage <50%    : 0    
+  CPUs with usage >50%    : 16   
+
+Memory used (RAM)         : 0.0%  [5MB of 64000MB]
+
+--------------------------------------------
+
