@@ -150,8 +150,8 @@ int main(int argc, char * argv[]){
 
     // do not print when there are multiple nodes
     if(is_parallel < 2){
-        // print number of node, edge and thread 
-        printf("%d %d %d ",node_number,edge_number, number_thread);
+        // print number of node, edge node number and thread 
+        printf("%d %d 1 %d ",node_number,edge_number, number_thread);
     }
 
     // set number of threads
@@ -675,8 +675,8 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
     // the process is response for print the result
     if(has_found == PRINT){
 
-        // print number of node, edge and thread 
-        printf("%d %d %d ",node_number,edge_number, number_thread);
+        // print number of node, edge node number and thread 
+        printf("%d %d %d %d ",node_number,edge_number, world_size, number_thread);
 
         //print time
         printf("%f ",end_time-start_time);
@@ -908,8 +908,8 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
     // the process is response for print the result
     if(leader == TRUE){
 
-        // print number of node, edge and thread 
-        printf("%d %d %d ",node_number,edge_number, number_thread);
+        // print number of node, edge node number and thread 
+        printf("%d %d %d %d ",node_number,edge_number, world_size, number_thread);
 
         //print time
         printf("%f ",end_time-start_time);
