@@ -478,7 +478,7 @@ void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matri
     // loop throught all the vertices set to find minimal vertex cover
     for(number_vertices=1;number_vertices<=node_number;number_vertices++){
 
-        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
+        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set) private(j)
         for(i=0;i<skip_amount;i++){
 
             //record the current vertex set
@@ -491,7 +491,7 @@ void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matri
                 vertex_set[j] = j;
             }
             // prepare for increment
-            vertex_set[number_vertices-1] -= 1;
+            vertex_set[number_vertices-1] -= skip_amount;
             
             // start with different init
             increment_n(vertex_set, number_vertices, node_number, i);
@@ -597,7 +597,7 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
 
         work_time -= omp_get_wtime();
 
-        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set)
+        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set) private(j)
         for(i=world_rank;i<skip_amount;i+=world_size){
 
             //record the current vertex set
@@ -610,7 +610,7 @@ void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix,
                 vertex_set[j] = j;
             }
             // prepare for increment
-            vertex_set[number_vertices-1] -= 1;
+            vertex_set[number_vertices-1] -= skip_amount;
             
             // start with different init
             increment_n(vertex_set, number_vertices, node_number, i);
@@ -788,7 +788,9 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 
         work_time -= omp_get_wtime();
 
-        #pragma omp parallel for num_threads(number_thread) shared(has_found, correct_vertex_set, flag, status, temp_ring_data, current_ring_data, hold, other_has_found, buffer_attached)
+        #pragma omp parallel for num_threads(number_thread) \
+        shared(has_found, correct_vertex_set, flag, status, temp_ring_data, \
+        current_ring_data, hold, other_has_found, buffer_attached) private(j)
         for(i=world_rank;i<skip_amount;i+=world_size){
 
             //record the current vertex set
@@ -801,7 +803,7 @@ void ring_based_vertex_cover(int node_number,int edge_number, int** adjacent_mat
                 vertex_set[j] = j;
             }
             // prepare for increment
-            vertex_set[number_vertices-1] -= 1;
+            vertex_set[number_vertices-1] -= skip_amount;
             
             // start with different init
             increment_n(vertex_set, number_vertices, node_number, i);
