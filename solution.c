@@ -14,7 +14,7 @@
  * <node>              : the number of nodes
  * <implementation>    : 0, 1 , 2 or 3. 0 is the sequential version, 
  *                                      1 is the parallel version, 
- *                                      2 is the the Gather & Scatter approach
+ *                                      2 is the Gather & Scatter approach
  *                                      3 is the Ring-based approach
  * <number_of_threads> : how many threads you want OpenMP to create for each node
  * <input_file>        : the input file
@@ -32,7 +32,11 @@
  * And the size of minimum vertex cover is 14.
  * And the minimum vertex cover  0 1 2 4 5 7 9 12 14 18 25 26 28 29
  * 
- * how to verify the program
+ * how to check for correctness
+ * I upload a python pragram to check the correctness. 
+ * This file is "verify.ipynb"
+ * And there are functions to produce the minimum vertex cover
+ * and functions to verify whether the vertex set is a vertex cover
 **/
 
 #include <stdio.h>
@@ -106,7 +110,7 @@ void sequential_vertex_cover(int node_number,int edge_number, int** adjacent_mat
 //parallel algorithm
 void parallel_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
                         int number_thread, int skip_amount);
-//mpi parallel algorithm
+//the Gather & Scatter approach
 void mpi_vertex_cover(int node_number,int edge_number, int** adjacent_matrix, 
                         int number_thread, int skip_amount);
 //ring based mpi parallel algorithm
