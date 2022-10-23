@@ -3,8 +3,7 @@
  * gcc 11.2.0
  * openmpi 4.1.1
  * 
- * 
- * need to raplace mpirun to srun in spartan !!
+ * need to raplace mpirun to srun on spartan
  * 
  * how to compile the program:
  * mpicc -fopenmp solution.c -o solution
@@ -28,7 +27,7 @@
  * and output:
  * 30 39 2 8 166.321157 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
  * means the input graph has 30 vertices and 39 edges
- * it has 2 nodes and 8 threads on each node. The run-time is 166.321157 seconde.
+ * it has 2 nodes and 8 threads on each node. The run-time is 166.321157 seconds.
  * And the size of minimum vertex cover is 14.
  * And the minimum vertex cover  0 1 2 4 5 7 9 12 14 18 25 26 28 29
  * 
