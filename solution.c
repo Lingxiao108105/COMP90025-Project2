@@ -1,6 +1,38 @@
 /**
  * environment: 
  * gcc 11.2.0
+ * openmpi 4.1.1
+ * 
+ * 
+ * need to raplace mpirun to srun in spartan !!
+ * 
+ * how to compile the program:
+ * mpicc -fopenmp solution.c -o solution
+ * 
+ * how to run the program:
+ * mpirun -n <node> ./solution <implementation> <number of threads>  <input file>
+ * <node>              : the number of nodes
+ * <implementation>    : 0, 1 , 2 or 3. 0 is the sequential version, 
+ *                                      1 is the parallel version, 
+ *                                      2 is the the Gather & Scatter approach
+ *                                      3 is the Ring-based approach
+ * <number_of_threads> : how many threads you want OpenMP to create for each node
+ * <input_file>        : the input file
+ * 
+ * output:
+ * <number of vertices> <number of edges> <node> <thread per node>  <time comsumed> <size of minimum vertex cover> <vertices in minimum vertex cover> 
+ * 
+ * e.g:
+ * mpirun -n 2 ./solution 2 8 input/input30.txt
+ * this command run the the Gather & Scatter approach with 8 threads each node with input input/input30.txt
+ * and output:
+ * 30 39 2 8 166.321157 14 0 1 2 4 5 7 9 12 14 18 25 26 28 29 
+ * means the input graph has 30 vertices and 39 edges
+ * it has 2 nodes and 8 threads on each node. The run-time is 166.321157 seconde.
+ * And the size of minimum vertex cover is 14.
+ * And the minimum vertex cover  0 1 2 4 5 7 9 12 14 18 25 26 28 29
+ * 
+ * how to verify the program
 **/
 
 #include <stdio.h>
